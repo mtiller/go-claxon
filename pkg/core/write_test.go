@@ -13,14 +13,14 @@ func TestLinkHeaders(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)
 
-	hyper := ClaxonPayload{
+	hyper := Claxon{
 		Schema: "#/me",
-		Links: []ClaxonLinks{
+		Links: []Link{
 			{Href: "/foo",
 				Rel:    "item",
 				Schema: "#/components/item",
 			}},
-		Actions: []ClaxonActions{
+		Actions: []Action{
 			{Id: "load",
 				Href: "./load",
 			}},

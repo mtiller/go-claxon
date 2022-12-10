@@ -2,7 +2,7 @@ package core
 
 import "encoding/json"
 
-func Marshal(v interface{}, claxon ClaxonPayload) ([]byte, error) {
+func Marshal(v interface{}, claxon Claxon) ([]byte, error) {
 	preamble, err := json.Marshal(claxon)
 	if err != nil {
 		return preamble, err

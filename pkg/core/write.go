@@ -15,7 +15,7 @@ import (
 // because they are clearly delimeted by the header name and a terminating
 // newline.  So their values can be ordinary octets.  That's why no percent
 // encoding takes place here.
-func linkValue(claxon ClaxonPayload) (string, error) {
+func linkValue(claxon Claxon) (string, error) {
 	segments := []string{}
 
 	// Add schema as a described by link
@@ -63,7 +63,7 @@ func linkValue(claxon ClaxonPayload) (string, error) {
 	return strings.Join(segments, ", "), nil
 }
 
-func Write(w http.ResponseWriter, v interface{}, claxon ClaxonPayload) error {
+func Write(w http.ResponseWriter, v interface{}, claxon Claxon) error {
 	body, err := json.Marshal(v)
 	if err != nil {
 		return err

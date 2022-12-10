@@ -15,7 +15,7 @@ type SampleProperties struct {
 }
 
 type SampleClaxson struct {
-	ClaxonPayload
+	Claxon
 	SampleProperties
 }
 
@@ -30,14 +30,14 @@ func TestSerialize(t *testing.T) {
 		Y: "hello",
 		Z: true,
 	}
-	data, err := Marshal(foo, ClaxonPayload{})
+	data, err := Marshal(foo, Claxon{})
 	require.NoError(err)
 	assert.Equal(`{"x":5,"y":"hello","z":true}`, string(data))
 
 	// You can use embedded structs to combine data and metadata and then just
 	// use the `json` package ot serialize
 	hyperfoo := SampleClaxson{
-		ClaxonPayload{
+		Claxon{
 			Schema: "https://example.com/schema",
 		},
 		SampleProperties{X: 5,
@@ -51,7 +51,7 @@ func TestSerialize(t *testing.T) {
 
 	// Finally, you can take ordinary data and annotate it with Claxon data
 	// using a `Marhsal` function with two arguments.
-	data, err = Marshal(foo, ClaxonPayload{
+	data, err = Marshal(foo, Claxon{
 		Schema: "https://example.com/schema",
 	})
 	require.NoError(err)
