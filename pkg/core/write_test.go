@@ -28,7 +28,7 @@ func TestLinkHeaders(t *testing.T) {
 
 	val, err := linkValue(hyper)
 	require.NoError(err)
-	assert.Equal(`<#/me>; rel="describedby", </foo>; rel="item"; schema="#/components/item", <./load>; type="action"; id="load"`, val)
+	assert.Equal(`<#/me>; rel="describedby", </foo>; rel="item"; schema="#/components/item", <./load>; claxon="action"; id="load"`, val)
 
 	foo := SampleProperties{
 		X: 5,

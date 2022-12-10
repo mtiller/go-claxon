@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/mtiller/rfc8288"
 )
 
 //
@@ -20,8 +22,12 @@ func linkValue(claxon Claxon) (string, error) {
 
 	// Add schema as a described by link
 	if claxon.Schema != "" {
-		segment := fmt.Sprintf("<%s>; rel=\"describedby\"", claxon.Schema)
-		segments = append(segments, segment)
+		link, err := rfc8288.NewLink(claxon.Schema)
+		link.Rel = "describedby"
+		if err != nil {
+			return "", err
+		}
+		segments = append(segments, link.String())
 	}
 	// Add links, if there are any
 	for i, link := range claxon.Links {
@@ -31,13 +37,15 @@ func linkValue(claxon Claxon) (string, error) {
 		if link.Href == "" {
 			return "", fmt.Errorf("Link %d had empty 'href' field", i)
 		}
-		if link.Schema == "" {
-			segment := fmt.Sprintf("<%s>; rel=\"%s\"", link.Href, link.Rel)
-			segments = append(segments, segment)
-		} else {
-			segment := fmt.Sprintf("<%s>; rel=\"%s\"; schema=\"%s\"", link.Href, link.Rel, link.Schema)
-			segments = append(segments, segment)
+		l, err := rfc8288.NewLink(link.Href)
+		if err != nil {
+			return "", err
 		}
+		l.Rel = link.Rel
+		if link.Schema != "" {
+			l.Extend("schema", link.Schema)
+		}
+		segments = append(segments, l.String())
 	}
 	// Add actions, if there are any
 	for i, action := range claxon.Actions {
@@ -47,18 +55,22 @@ func linkValue(claxon Claxon) (string, error) {
 		if action.Href == "" {
 			return "", fmt.Errorf("action %d had empty 'href' field", i)
 		}
-		parts := []string{fmt.Sprintf("<%s>", action.Href), `type="action"`, fmt.Sprintf("id=\"%s\"", action.Id)}
+		l, err := rfc8288.NewLink(action.Href)
+		if err != nil {
+			return "", err
+		}
+		l.Extend("claxon", "action")
+		l.Extend("id", action.Id)
 		if action.Method != "" {
-			parts = append(parts, fmt.Sprintf("method=\"%s\"", action.Method))
+			l.Extend("method", action.Method)
 		}
 		if action.RequestSchema != "" {
-			parts = append(parts, fmt.Sprintf("reqs=\"%s\"", action.RequestSchema))
+			l.Extend("reqs", action.RequestSchema)
 		}
 		if action.ResponseSchema != "" {
-			parts = append(parts, fmt.Sprintf("ress=\"%s\"", action.ResponseSchema))
+			l.Extend("ress", action.ResponseSchema)
 		}
-		segment := strings.Join(parts, "; ")
-		segments = append(segments, segment)
+		segments = append(segments, l.String())
 	}
 	return strings.Join(segments, ", "), nil
 }

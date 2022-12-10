@@ -16,8 +16,8 @@ type Link struct {
 }
 
 type Action struct {
-	Id             string `json:"id"`
 	Href           string `json:"href"`
+	Id             string `json:"id"`
 	Method         string `json:"method,omitempty"`
 	RequestSchema  string `json:"reqs,omitempty"`
 	ResponseSchema string `json:"ress,omitempty"`
