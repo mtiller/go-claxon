@@ -4,60 +4,51 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/mtiller/rfc8288"
 )
 
-//
-// Link: <https://one.example.com>; rel="preconnect", <https://two.example.com>; rel="preconnect", <https://three.example.com>; rel="preconnect"
-
-// NB - URLS in headers are not percent encoded.  From what I can tell from
-// https://www.rfc-editor.org/rfc/rfc2616, header values don't require encodings
-// because they are clearly delimeted by the header name and a terminating
-// newline.  So their values can be ordinary octets.  That's why no percent
-// encoding takes place here.
-func linkValue(claxon Claxon) (string, error) {
-	segments := []string{}
+func ToRFC8288Links(claxon Claxon) ([]rfc8288.Link, error) {
+	ret := []rfc8288.Link{}
 
 	// Add schema as a described by link
 	if claxon.Schema != "" {
 		link, err := rfc8288.NewLink(claxon.Schema)
-		link.Rel = "describedby"
 		if err != nil {
-			return "", err
+			return nil, err
 		}
-		segments = append(segments, link.String())
+		link.Rel = "describedby"
+		ret = append(ret, *link)
 	}
 	// Add links, if there are any
 	for i, link := range claxon.Links {
 		if link.Rel == "" {
-			return "", fmt.Errorf("Link %d had empty 'rel' field", i)
+			return nil, fmt.Errorf("Link %d had empty 'rel' field", i)
 		}
 		if link.Href == "" {
-			return "", fmt.Errorf("Link %d had empty 'href' field", i)
+			return nil, fmt.Errorf("Link %d had empty 'href' field", i)
 		}
 		l, err := rfc8288.NewLink(link.Href)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		l.Rel = link.Rel
 		if link.Type != "" {
 			l.Type = link.Type
 		}
-		segments = append(segments, l.String())
+		ret = append(ret, *l)
 	}
 	// Add actions, if there are any
 	for i, action := range claxon.Actions {
 		if action.Id == "" {
-			return "", fmt.Errorf("action %d had empty 'id' field", i)
+			return nil, fmt.Errorf("action %d had empty 'id' field", i)
 		}
 		if action.Href == "" {
-			return "", fmt.Errorf("action %d had empty 'href' field", i)
+			return nil, fmt.Errorf("action %d had empty 'href' field", i)
 		}
 		l, err := rfc8288.NewLink(action.Href)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		l.Extend("claxon", "action")
 		l.Extend("id", action.Id)
@@ -70,21 +61,24 @@ func linkValue(claxon Claxon) (string, error) {
 		if action.ResponseSchema != "" {
 			l.Extend("ress", action.ResponseSchema)
 		}
-		segments = append(segments, l.String())
+		ret = append(ret, *l)
 	}
-	return strings.Join(segments, ", "), nil
+	return ret, nil
 }
 
-func Write(w http.ResponseWriter, v interface{}, claxon Claxon) error {
+func WriteAsHeaders(w http.ResponseWriter, v interface{}, claxon Claxon) error {
 	body, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
 
-	val, err := linkValue(claxon)
+	links, err := ToRFC8288Links(claxon)
 	if err != nil {
 		return err
 	}
+
+	// TODO: Use LinkHeaderValue
+	val := rfc8288.LinkHeader(links...)[6:]
 	w.Header().Add("Link", val)
 	_, err = w.Write(body)
 	return err

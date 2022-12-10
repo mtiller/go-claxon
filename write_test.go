@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/mtiller/rfc8288"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -26,9 +27,10 @@ func TestLinkHeaders(t *testing.T) {
 			}},
 	}
 
-	val, err := linkValue(hyper)
+	links, err := ToRFC8288Links(hyper)
 	require.NoError(err)
-	assert.Equal(`<#/me>; rel="describedby", </foo>; rel="item"; type="application/json", <./load>; claxon="action"; id="load"`, val)
+	header := rfc8288.LinkHeader(links...)
+	assert.Equal(`Link: <#/me>; rel="describedby", </foo>; rel="item"; type="application/json", <./load>; claxon="action"; id="load"`, header)
 
 	foo := SampleProperties{
 		X: 5,
@@ -37,11 +39,11 @@ func TestLinkHeaders(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	err = Write(w, foo, hyper)
+	err = WriteAsHeaders(w, foo, hyper)
 	require.NoError(err)
 	res := w.Result()
 	aval := res.Header.Get("Link")
-	assert.Equal(val, aval)
+	assert.Equal(header[6:], aval)
 	body, err := io.ReadAll(res.Body)
 	require.NoError(err)
 	defer res.Body.Close()

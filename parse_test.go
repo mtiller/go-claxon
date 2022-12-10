@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/mtiller/rfc8288"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -35,13 +36,16 @@ func TestRoundTrip(t *testing.T) {
 			}},
 	}
 
-	v1, err := linkValue(s1)
+	l1, err := ToRFC8288Links(s1)
 	require.NoError(err)
 
-	v2, err := linkValue(s2)
+	l2, err := ToRFC8288Links(s2)
 	require.NoError(err)
 
-	header := fmt.Sprintf("Link: %s\r\nLink: %s\r\n", v1, v2)
+	h1 := rfc8288.LinkHeader(l1...)
+	h2 := rfc8288.LinkHeader(l2...)
+
+	header := fmt.Sprintf("%s\r\n%s\r\n", h1, h2)
 
 	c := ParseLinkHeader(header)
 
