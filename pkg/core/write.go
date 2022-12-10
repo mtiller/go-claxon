@@ -42,8 +42,8 @@ func linkValue(claxon Claxon) (string, error) {
 			return "", err
 		}
 		l.Rel = link.Rel
-		if link.Schema != "" {
-			l.Extend("schema", link.Schema)
+		if link.Type != "" {
+			l.Type = link.Type
 		}
 		segments = append(segments, l.String())
 	}

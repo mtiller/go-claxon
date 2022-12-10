@@ -48,9 +48,8 @@ func ParseLinkHeader(s ...string) Claxon {
 				Href: link.HREF.String(),
 				Rel:  link.Rel,
 			}
-			schema, has := link.StringExtension("schema")
-			if has {
-				add.Schema = schema
+			if link.Type != "" {
+				add.Type = link.Type
 			}
 			ret.Links = append(ret.Links, add)
 		}

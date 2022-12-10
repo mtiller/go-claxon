@@ -17,8 +17,8 @@ func TestLinkHeaders(t *testing.T) {
 		Schema: "#/me",
 		Links: []Link{
 			{Href: "/foo",
-				Rel:    "item",
-				Schema: "#/components/item",
+				Rel:  "item",
+				Type: "application/json",
 			}},
 		Actions: []Action{
 			{Id: "load",
@@ -28,7 +28,7 @@ func TestLinkHeaders(t *testing.T) {
 
 	val, err := linkValue(hyper)
 	require.NoError(err)
-	assert.Equal(`<#/me>; rel="describedby", </foo>; rel="item"; schema="#/components/item", <./load>; claxon="action"; id="load"`, val)
+	assert.Equal(`<#/me>; rel="describedby", </foo>; rel="item"; type="application/json", <./load>; claxon="action"; id="load"`, val)
 
 	foo := SampleProperties{
 		X: 5,

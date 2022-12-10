@@ -16,8 +16,8 @@ func TestRoundTrip(t *testing.T) {
 		Schema: "#/me",
 		Links: []Link{
 			{Href: "/foo",
-				Rel:    "item",
-				Schema: "#/components/item",
+				Rel:  "item",
+				Type: "application/json",
 			}},
 		Actions: []Action{
 			{Id: "load",
@@ -27,8 +27,7 @@ func TestRoundTrip(t *testing.T) {
 	s2 := Claxon{
 		Links: []Link{
 			{Href: "/bar",
-				Rel:    "item",
-				Schema: "#/components/item",
+				Rel: "item",
 			}},
 		Actions: []Action{
 			{Id: "clear",
@@ -50,14 +49,13 @@ func TestRoundTrip(t *testing.T) {
 		Schema: "#/me",
 		Links: []Link{
 			{
-				Href:   "/foo",
-				Rel:    "item",
-				Schema: "#/components/item",
+				Href: "/foo",
+				Rel:  "item",
+				Type: "application/json",
 			},
 			{
-				Href:   "/bar",
-				Rel:    "item",
-				Schema: "#/components/item",
+				Href: "/bar",
+				Rel:  "item",
 			}},
 		Actions: []Action{
 			{Id: "load",

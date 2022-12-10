@@ -7,12 +7,10 @@ type Claxon struct {
 }
 
 type Link struct {
-	Href string `json:"href"`
-	Rel  string `json:"rel"`
-	// Here we use `schema` and not `schema` because this field isn't describing
-	// the data it appears alongside (i.e., the link data) but rather the schema
-	// of the data we will find if follow the provided link.
-	Schema string `json:"schema,omitempty"`
+	Href  string `json:"href"`
+	Rel   string `json:"rel"`
+	Title string `json:"title"`
+	Type  string `json:"type,omitempty"`
 }
 
 type Action struct {
