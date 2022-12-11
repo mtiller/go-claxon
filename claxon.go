@@ -1,4 +1,4 @@
-package core
+package claxon
 
 type Claxon struct {
 	Schema  string   `json:"$schema,omitempty"`

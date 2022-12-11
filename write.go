@@ -1,4 +1,4 @@
-package core
+package claxon
 
 import (
 	"encoding/json"
