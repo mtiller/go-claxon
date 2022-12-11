@@ -13,34 +13,19 @@ func TestRoundTrip(t *testing.T) {
 	require := require.New(t)
 	assert := assert.New(t)
 
-	s1 := Claxon{
+	s1 := &Claxon{
 		Schema: "#/me",
-		Links: []Link{
-			{Href: "/foo",
-				Rel:   "item",
-				Title: "Foo",
-				Type:  "application/json",
-			}},
-		Actions: []Action{
-			{Id: "load",
-				Href: "./load",
-			}},
 	}
-	s2 := Claxon{
-		Links: []Link{
-			{Href: "/bar",
-				Rel: "item",
-			}},
-		Actions: []Action{
-			{Id: "clear",
-				Href: "./clear",
-			}},
-	}
+	s1.AddLink("item", "/foo", "Foo", "application/json")
+	s1.AddAction("load", "./load")
+	s2 := &Claxon{}
+	s2.AddLink("item", "/bar")
+	s2.AddAction("clear", "./clear")
 
-	l1, err := ToRFC8288Links(s1)
+	l1, err := ToRFC8288Links(*s1)
 	require.NoError(err)
 
-	l2, err := ToRFC8288Links(s2)
+	l2, err := ToRFC8288Links(*s2)
 	require.NoError(err)
 
 	h1 := rfc8288.LinkHeader(l1...)
