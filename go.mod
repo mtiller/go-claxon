@@ -5,7 +5,7 @@ go 1.19
 // replace github.com/mtiller/rfc8288 => ../rfc8288
 
 require (
-	github.com/mtiller/rfc8288 v0.0.0-20221210192124-3c38128cf484
+	github.com/mtiller/rfc8288 v0.1.0
 	github.com/stretchr/testify v1.8.1
 )
 
