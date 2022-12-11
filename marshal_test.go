@@ -39,6 +39,7 @@ func TestSerialize(t *testing.T) {
 	hyperfoo := SampleClaxson{
 		Claxon{
 			Schema: "https://example.com/schema",
+			Self:   "/me",
 		},
 		SampleProperties{X: 5,
 			Y: "hello",
@@ -47,13 +48,14 @@ func TestSerialize(t *testing.T) {
 	}
 	data, err = json.Marshal(hyperfoo)
 	require.NoError(err)
-	assert.Equal(`{"$schema":"https://example.com/schema","x":5,"y":"hello","z":true}`, string(data))
+	assert.Equal(`{"$schema":"https://example.com/schema","$self":"/me","x":5,"y":"hello","z":true}`, string(data))
 
 	// Finally, you can take ordinary data and annotate it with Claxon data
 	// using a `Marhsal` function with two arguments.
 	data, err = Marshal(foo, Claxon{
 		Schema: "https://example.com/schema",
+		Self:   "/me",
 	})
 	require.NoError(err)
-	assert.Equal(`{"$schema":"https://example.com/schema","x":5,"y":"hello","z":true}`, string(data))
+	assert.Equal(`{"$schema":"https://example.com/schema","$self":"/me","x":5,"y":"hello","z":true}`, string(data))
 }

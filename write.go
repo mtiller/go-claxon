@@ -20,6 +20,14 @@ func ToRFC8288Links(claxon Claxon) ([]rfc8288.Link, error) {
 		link.Rel = "describedby"
 		ret = append(ret, *link)
 	}
+	if claxon.Self != "" {
+		link, err := rfc8288.NewLink(claxon.Self)
+		if err != nil {
+			return nil, err
+		}
+		link.Rel = "self"
+		ret = append(ret, *link)
+	}
 	// Add links, if there are any
 	for i, link := range claxon.Links {
 		if link.Rel == "" {

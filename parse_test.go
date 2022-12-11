@@ -15,6 +15,7 @@ func TestRoundTrip(t *testing.T) {
 
 	s1 := &Claxon{
 		Schema: "#/me",
+		Self:   "/me",
 	}
 	s1.AddLink("item", "/foo", "Foo", "application/json")
 	s1.AddAction("load", "./load")
@@ -37,6 +38,7 @@ func TestRoundTrip(t *testing.T) {
 
 	assert.Equal(Claxon{
 		Schema: "#/me",
+		Self:   "/me",
 		Links: []Link{
 			{
 				Href:  "/foo",

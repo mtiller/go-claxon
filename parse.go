@@ -21,6 +21,10 @@ func ParseLinkHeader(s ...string) Claxon {
 			ret.Schema = link.HREF.String()
 			continue
 		}
+		if link.Rel == "self" {
+			ret.Self = link.HREF.String()
+			continue
+		}
 		key, exists := link.StringExtension("claxon")
 		if exists && key == "action" {
 			add := Action{

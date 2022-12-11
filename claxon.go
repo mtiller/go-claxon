@@ -2,6 +2,7 @@ package claxon
 
 type Claxon struct {
 	Schema  string   `json:"$schema,omitempty"`
+	Self    string   `json:"$self,omitempty"`
 	Links   []Link   `json:"$links,omitempty"`
 	Actions []Action `json:"$actions,omitempty"`
 }

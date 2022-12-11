@@ -16,6 +16,7 @@ func TestLinkHeaders(t *testing.T) {
 
 	hyper := Claxon{
 		Schema: "#/me",
+		Self:   "/me",
 		Links: []Link{
 			{Href: "/foo",
 				Rel:   "item",
@@ -31,7 +32,7 @@ func TestLinkHeaders(t *testing.T) {
 	links, err := ToRFC8288Links(hyper)
 	require.NoError(err)
 	header := rfc8288.LinkHeader(links...)
-	assert.Equal(`Link: <#/me>; rel="describedby", </foo>; rel="item"; title="Foo"; type="application/json", <./load>; title="load"; claxon="action"`, header)
+	assert.Equal(`Link: <#/me>; rel="describedby", </me>; rel="self", </foo>; rel="item"; title="Foo"; type="application/json", <./load>; title="load"; claxon="action"`, header)
 
 	foo := SampleProperties{
 		X: 5,
