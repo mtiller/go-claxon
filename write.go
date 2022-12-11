@@ -33,6 +33,9 @@ func ToRFC8288Links(claxon Claxon) ([]rfc8288.Link, error) {
 			return nil, err
 		}
 		l.Rel = link.Rel
+		if link.Title != "" {
+			l.Title = link.Title
+		}
 		if link.Type != "" {
 			l.Type = link.Type
 		}
@@ -50,8 +53,8 @@ func ToRFC8288Links(claxon Claxon) ([]rfc8288.Link, error) {
 		if err != nil {
 			return nil, err
 		}
+		l.Title = action.Id
 		l.Extend("claxon", "action")
-		l.Extend("id", action.Id)
 		if action.Method != "" {
 			l.Extend("method", action.Method)
 		}
@@ -77,8 +80,7 @@ func WriteAsHeaders(w http.ResponseWriter, v interface{}, claxon Claxon) error {
 		return err
 	}
 
-	// TODO: Use LinkHeaderValue
-	val := rfc8288.LinkHeader(links...)[6:]
+	val := rfc8288.LinkHeaderValue(links...)
 	w.Header().Add("Link", val)
 	_, err = w.Write(body)
 	return err

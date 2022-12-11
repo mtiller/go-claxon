@@ -26,10 +26,7 @@ func ParseLinkHeader(s ...string) Claxon {
 			add := Action{
 				Href: link.HREF.String(),
 			}
-			id, has := link.StringExtension("id")
-			if has {
-				add.Id = id
-			}
+			add.Id = link.Title
 			method, has := link.StringExtension("method")
 			if has {
 				add.Method = method
@@ -47,6 +44,9 @@ func ParseLinkHeader(s ...string) Claxon {
 			add := Link{
 				Href: link.HREF.String(),
 				Rel:  link.Rel,
+			}
+			if link.Title != "" {
+				add.Title = link.Title
 			}
 			if link.Type != "" {
 				add.Type = link.Type

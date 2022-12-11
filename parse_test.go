@@ -17,8 +17,9 @@ func TestRoundTrip(t *testing.T) {
 		Schema: "#/me",
 		Links: []Link{
 			{Href: "/foo",
-				Rel:  "item",
-				Type: "application/json",
+				Rel:   "item",
+				Title: "Foo",
+				Type:  "application/json",
 			}},
 		Actions: []Action{
 			{Id: "load",
@@ -53,9 +54,10 @@ func TestRoundTrip(t *testing.T) {
 		Schema: "#/me",
 		Links: []Link{
 			{
-				Href: "/foo",
-				Rel:  "item",
-				Type: "application/json",
+				Href:  "/foo",
+				Rel:   "item",
+				Title: "Foo",
+				Type:  "application/json",
 			},
 			{
 				Href: "/bar",
