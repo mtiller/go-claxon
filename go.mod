@@ -1,4 +1,4 @@
-module github.com/mtiller/claxon
+module github.com/mtiller/go-claxon
 
 go 1.19
 
